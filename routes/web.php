@@ -28,7 +28,7 @@ Route::get('product','productController@index')->name('product.index');
 Route::get('product/create','productController@create')->name('product.create');
 Route::post('product/store','productController@store')->name('product.store');
 //Route::get('product/show/{id}','productController@show')->name('product.show');
-Route::get('product/edit/{id}','productController@edit')->name('product.edit');
+Route::get('product/edit/{id}','productController@edit')->name('product.edit');git commit -m "first commit"
 Route::PUT('product/update/{id}','productController@update')->name('product.update');
 Route::POST('product/destroy/{id}','productController@destroy')->name('product.destroy');
 
