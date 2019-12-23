@@ -27,7 +27,7 @@ class HomeController extends Controller
     }
     public function showResetForm()
     {
-        return view('admin.change_password');
+        return view('change_password');
     }
 
     public function updatepassword(Request $request){

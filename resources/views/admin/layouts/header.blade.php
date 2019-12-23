@@ -29,7 +29,7 @@
                     </li>
                     <li class="user-footer">
                         <div class="pull-left">
-                            <a href="#" class="btn btn-default btn-flat">Profile</a>
+                            <a href="{{ route('password.change') }}" class="btn btn-default btn-flat">Change Password</a>
                         </div>
                         <div class="pull-right">
                             <a class="btn btn-default btn-flat" href="{{ route('logout') }}"

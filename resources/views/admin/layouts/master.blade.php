@@ -19,7 +19,7 @@
 
     <!-- Content Header (Page header) -->
         @include('admin.layouts._messages')
-        @include('admin.layouts.content-header')
+{{--        @include('admin.layouts.content-header')--}}
     <!-- /.content-header -->
 
     <!-- Main content -->
