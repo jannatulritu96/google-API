@@ -16,8 +16,8 @@ class Product extends Model
     {
         return $this->hasMany('App\ProductColor','product_id','id');
     }
-    public function relProduct()
+    public function relProductImage()
     {
-        return $this->hasMany('App\ProductImages','product_id','id');
+        return $this->hasMany('App\ProductImage','product_id','id');
     }
 }

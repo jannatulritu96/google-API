@@ -13,11 +13,24 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $data['title'] = 'product Information';
-        $product= new product();
+        $products=  Product::select('*');
+        $products= $products->with(['relProductColor','relProductImage','relCategory']);
         $render=[];
-        $product= $product->paginate(10);
-        $product= $product->appends($render);
-        $data['$product'] = $product;
+
+        if (isset($request->title)) {
+            $products->where('name', 'like', '%'.$request->name.'%');
+            $render['name'] = $request->name;
+        }
+        if (isset($request->status)) {
+            $products->where('status', $request->status);
+            $render['status'] = $request->status;
+        }
+
+        $data['status'] = (isset($request->status)) ? $request->status : '';
+        $products= $products->paginate(2);
+        $products= $products->appends($render);
+
+        $data['products'] = $products;
         return view('admin.product.index',$data);
     }
 
@@ -30,107 +43,96 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-//        dd($request->all());
-//        $request->validate([
-//
-//            'category_id'=>'required',
-//            'name'=>'required',
-//            'details'=>'required',
-//            'original_price'=>'required',
-//            'discount_percentage'=>'required',
-//            'discount_amount' => 'required',
-//            'price' => 'required',
-//            'status' => 'required',
-//        ]);
-//dd($request->all());
-        $data = [
-            'category_id' => $request->category_id,
-            'name' => $request->name,
-            'details' => $request->details,
-            'original_price' => $request->original_price,
-            'discount_percentage' => $request->discount_percentage,
-            'discount_amount' => $request->{($request->original_price*$request->discount_percentage)/100},
-            'price' => $request->{($request->original_price-$request->discount_amount)},
-            'status' => $request->status
-        ];
+        $data = $request->all();
+        // dd($request->all());
         $productData = Product::create($data);
-
-        if ($productData->id) {
+        if ($productData->id){
             // ########### After Product Insert ##############
-            if (isset($request->colors) && !empty($request->colors)) {
-                foreach ($request->colors as $color) {
-                    $colorData = [
-                        'product_id' => $productData->id,
+
+            if (!empty($data['product_color'])) {
+                //array filter for zero empty value check
+                $productColors = $data['product_color'];
+                $productColors = !empty($productColors) ? array_values(array_filter($productColors)) : array();
+                $colorData = [];
+                foreach ($productColors as $k => $color) {
+                    $colorData[] = [
+                        'product_id'   => $productData->id,
                         'color_name' => $color,
                     ];
-                    ProductColor::create($data);
+                }
+                if (!empty($colorData)) {
+                    ProductColor::insert($colorData);
+                }else{
+                    return redirect()->back()->with('error', 'Product color insert failed!');
                 }
             }
 
-//            if (isset($data['check_image'])) {
-//                if ($request->hasFile('product_image')) {
-//                    $images = [];
-//                    foreach ($request->file('product_image') as $key => $image) {
-//                        $fileNameMt = imageUpload($image, "_$request->name", "$this->_moduleImagePath", '1200', '1200');
-//                        $images[] = [
-//                            'product_id' => $productData->id,
-//                            'image' => $fileNameMt,
-//                        ];
-//                    }
-//                    if (!empty($images)) {
-//                        ProductImage::insert($images);
-//                    }
-//                }
-//            }
+            if ($request->hasFile('product_image')) {
+                $images = [];
+                foreach($request->file('product_image') as $key => $image)
+                {
+                    $filename = time().'.'.$image->getClientOriginalExtension();
+                    $image->move(public_path('media/product'), $filename);
+                    $images[] = [
+                        'product_id' => $productData->id,
+                        'image' => $filename,
+                    ];
+                }
+                if (!empty($images)) {
+                    ProductImage::insert($images);
+                }
+            }
 
-
+            return redirect()->back()->with('success', 'Product save successfully!');
+        }else{
+            return redirect()->back()->with('error', 'Product insert failed!');
         }
-
-
-            $productData->save();
-        session()->flash('success','Information stored successfully');
         return redirect()->route('product.index');
     }
 
     public function show($id)
     {
-        //
+        $data['title'] = 'Product show';
+        $product = Product::findOrFail($id);
+        $data['product'] = $product;
+        return view('admin.product.show',$data);
+
     }
 
     public function edit($id)
     {
         $data['title'] = 'Edit form';
-        $data['product'] = product::findOrFail($id);
+        $data['product'] = Product::findOrFail($id);
+        $data['categories'] = Category::where('status','Active')->get();
         return view('admin.product.edit',$data);
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $data = $request->all();
+        Product::find($id)->update($data);
+        return  redirect()->route('product.index');
 
-            'product_id'=>'required',
-            'image'=>'mimes:png,jpg,jpeg'
-        ]);
-        $product = product::findOrfail($id);
-
-        $product->product_id= $request->product_id;
-        if($request->hasFile('image'))
-        {
-
-            $image= $request->file('image');
-            $image->move('assets/img/',$image->getClientOriginalName());
-            $product->image = 'assets/img/'.$image->getClientOriginalName();
-            $product->save();
-        }
-        $product->save();
-        session()->flash('success','Information stored successfully');
-        return redirect()->route('product.index');
     }
 
     public function destroy($id)
     {
-        product::findOrFail($id)->delete();
-        session()->flash('success','product deleted successfully');
-        return redirect()->route('product.index');
+        $delete = Product::findOrFail($id)->delete();
+
+        if ($delete == 1) {
+            $success = true;
+            $message = "User deleted successfully";
+        } else {
+            $success = true;
+            $message = "User not found";
+        }
+
+        //  Return response
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
+
+
     }
 }

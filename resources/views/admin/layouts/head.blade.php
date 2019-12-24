@@ -25,11 +25,9 @@
 
 <!-- jQuery 3 -->
 <script src="{{asset('public/assets/bower_components/jquery/dist/jquery.min.js')}}"></script>
-<![endif]-->
+<!-- [endif]-->
+
 <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
-<!-- Select2 -->
-{{--<link rel="stylesheet" href="{{ asset('public/assets/plugins/select2/css/select2.min.css')}}">--}}
-{{--<link rel="stylesheet" href="{{ asset('public/assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">--}}
 <!-- Google Font -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 

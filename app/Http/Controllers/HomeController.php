@@ -25,25 +25,4 @@ class HomeController extends Controller
     {
         return view('dashboard');
     }
-    public function showResetForm()
-    {
-        return view('change_password');
-    }
-
-    public function updatepassword(Request $request){
-        // dd($request->all());
-        $password=Auth::User()->password;
-        $oldpass=$request->oldpass;
-
-        if(Hash::check($oldpass,$password)){
-            $user=User::find(Auth::id());
-            $user->password=Hash::make($request->password);
-            $user->save();
-            Auth::logout();
-
-            return Redirect()->route('login');
-        }else{
-            return Redirect()->back();
-        }
-    }
 }

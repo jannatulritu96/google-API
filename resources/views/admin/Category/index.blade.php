@@ -10,7 +10,7 @@
 
         <form method="get" class="form-horizontal" action="{{route('category.index')}}" >
             <div class="col-sm-2" style="margin-left: 600px;margin-top: -55px;">
-                <input type="name" class="form-control" name="name"  placeholder="Name" value="{{Request::get('name')}}" onchange="search_post()" >
+                <input type="name" class="form-control" name="name"  placeholder="Name" value="{{Request::get('name')}}" onchange="search_post()" style="margin-top: 16px;">
             </div>
             <div class="col-sm-2" style="margin-left: 873px;margin-top: -39px;">
                 <select class="form-control select2" style="width: 100%;" name="status" onchange="search_post()">
@@ -60,7 +60,7 @@
                 </tbody>
             </table>
 
-{{--            {!! $categories->render() !!}--}}
+            {!! $categories->render() !!}
         </div>
 
 @endsection

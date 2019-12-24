@@ -18,8 +18,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('dashboard','DashboardController@index')->name('dashboard');
-Route::get('password-change', 'HomeController@showResetForm')->name('password.change');
-Route::post('password-update', 'HomeController@updatepassword')->name('update.password');
+Route::get('password-change', 'DashboardController@showResetForm')->name('password.change');
+Route::post('password-update', 'DashboardController@updatepassword')->name('update.password');
 
 Route::get('/password-reset', 'Auth\ForgotPasswordController@updatepass')->name('reset.password');
 

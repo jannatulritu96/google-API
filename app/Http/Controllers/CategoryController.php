@@ -10,26 +10,25 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $data['title'] = 'Category List';
-        $sql = Category::get();
+        $categories = Category::select('*');
         $render = [];
 
         if (isset($request->name)) {
-            $sql->where('name', 'like', '%'.$request->name.'%');
+            $categories->where('name', 'like', '%'.$request->name.'%');
             $render['name'] = $request->name;
         }
 
         if (isset($request->status)) {
-            $sql->where('status', $request->status);
+            $categories->where('status', $request->status);
             $render['status'] = $request->status;
         }
 
 
-//        $categories = $sql->paginate(2);
-//        $categories=$sql->appends($render);
-        $data['categories'] = $sql;
         $data['status'] = (isset($request->status)) ? $request->status : '';
+        $categories = $categories->paginate(2);
+         $categories=$categories->appends($render);
 
-//         return response()->json($data);
+        $data['categories'] = $categories;
         return view ('admin.category.index', $data);
 
     }
@@ -64,6 +63,15 @@ class CategoryController extends Controller
         $category->save();
         session()->flash('success','Category stored successfully');
         return redirect()->route('category.index');
+    }
+
+    public function show($id)
+    {
+        $data['title'] = 'Category show';
+        $category = Category::findOrFail($id);
+        $data['category'] = $category;
+        return view('admin.category.show',$data);
+
     }
 
     public function edit($id)
