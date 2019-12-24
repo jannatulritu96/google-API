@@ -45,7 +45,7 @@
                 <!-- /.box-body -->
                 <form method="POST" action="{{ route('update.password') }}">
                     @csrf
-
+                    @include('_messages')
                     <div class="form-group row" style="margin-top: 21px;">
                         <label for="oldpass" class="col-md-4 col-form-label text-md-right">{{ __('Old Password') }}</label>
 

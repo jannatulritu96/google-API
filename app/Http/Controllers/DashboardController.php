@@ -10,10 +10,16 @@ use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-        $data['title'] = 'Dashboard';
 
+        $data['title'] = 'Dashboard';
         return view('admin.dashboard', $data);
     }
 
@@ -24,19 +30,16 @@ class DashboardController extends Controller
     }
 
     public function updatepassword(Request $request){
-        // dd($request->all());
-         $password=Auth::User()->password;
+        $password=User::find(Auth::id())->password;
         $oldpass=$request->oldpass;
 
         if(Hash::check($oldpass,$password)){
             $user=User::find(Auth::id());
             $user->password=Hash::make($request->password);
             $user->save();
-            Auth::logout();
-
-            return Redirect()->route('login');
+            return Redirect()->route('login')->with('success', 'Product save successfully!');
         }else{
-            return Redirect()->back();
+            return Redirect()->back()->with('error', 'Product insert failed!');
         }
 
     }

@@ -10,7 +10,7 @@
                     </div>
                     <form method="post" class="form-horizontal" action="{{ route('category.store') }}" enctype="multipart/form-data">
                         @csrf
-                        @include('admin.layouts._messages')
+                        @include('_messages')
                         <div class="box-body">
                             <div class="form-group" style="margin-left: 5px;">
                                 <label for="exampleInputEmail1">Name</label>

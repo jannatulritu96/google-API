@@ -18,7 +18,7 @@
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
-        @endif
+            @endif
 
         <!-- general form elements -->
             <div class="box box-primary">
