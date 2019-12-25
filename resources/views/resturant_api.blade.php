@@ -62,6 +62,7 @@
         searchPlace = {lat:place.geometry.location.lat(),lon:place.geometry.location.lng()};
     })
     function search(){
+
         cardBody = '';
         $('#card-body').html('');
         $('#main-body').addClass('searched');
@@ -79,17 +80,21 @@
                 $('#loader').css('display', 'none');
                 resturants = res.locations;
                 console.log(resturants);
-                for ( let i = 0; i < resturants.length; i++) {
-                    cardBody += ' <div class="col-md-4">\n' +
-                        '                <div class="card">\n' +
-                        '                    <img src="'+resturants[i].storePhotos[0]+'" class="card-img-top" alt="..." style="height: 215px;">\n' +
-                        '                    <div class="card-body">\n' +
-                        '                        <h5 class="card-title"><b>Name: </b>'+resturants[i].details.name+'</h5>\n' +
-                        '                        <p class="card-text"><b>Address: </b>'+resturants[i].details.formatted_address+'</p>\n' +
-                        '                        <p class="card-text"><b>Phone: </b>'+resturants[i].details.formatted_phone_number+'</p>\n' +
-                        '                    </div>\n' +
-                        '                </div>\n' +
-                        '            </div>';
+                for (let i = 0; i < resturants.length; i++) {
+                    image = resturants[i].storePhotos[0];
+                    if (!resturants[i].storePhotos[0]) {
+                        image = 'http://lorempixel.com/348/215/food/';
+                    }
+                    cardBody += `<div class="col-md-4">
+                <div class="card">
+                    <img src="${image}" class="card-img-top" alt="..." style="height: 215px;">
+                    <div class="card-body">
+                        <h5 class="card-title"><b>Name: </b>${resturants[i].details.name}</h5>
+                        <p class="card-text"><b>Address: </b>${resturants[i].details.formatted_address}</p>
+                        <p class="card-text"><b>Phone: </b>${resturants[i].details.formatted_phone_number}</p>
+                    </div>
+                </div>
+            </div>`;
                 }
                 $('#card-body').html(cardBody);
             }});
