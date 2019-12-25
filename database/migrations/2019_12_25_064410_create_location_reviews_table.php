@@ -15,7 +15,7 @@ class CreateLocationReviewsTable extends Migration
     {
         Schema::create('location_reviews', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('place_id');
+            $table->string('place_id');
             $table->string('author_name');
             $table->string('author_url');
             $table->string('profile_photo_url');

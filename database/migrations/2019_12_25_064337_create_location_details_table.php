@@ -15,7 +15,7 @@ class CreateLocationDetailsTable extends Migration
     {
         Schema::create('location_details', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('place_id');
+            $table->string('place_id');
             $table->string('name');
             $table->string('formatted_address');
             $table->string('formatted_phone_number');

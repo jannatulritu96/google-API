@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Location;
+use App\LocationDetails;
+use App\LocationPhotos;
+use App\LocationReviews;
 use Illuminate\Http\Request;
 
 class FoodApiController extends Controller
@@ -38,12 +42,52 @@ class FoodApiController extends Controller
                         'reviews' => isset($details['result']['reviews']) ? $details['result']['reviews'] : [],
                     );
 
+
                     $rimage = [];
                     foreach($locDetails['photos'] as $pdetails){
 
                         // $images = file_get_contents("https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photoreference=".$pdetails['photo_reference']."&key=".env('GOOGLE_API_KEY'));
                         $images = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photoreference=".$pdetails['photo_reference']."&key=".env('GOOGLE_API_KEY');
                         $rimage[] = $images;
+                    }
+
+                    $location_check = Location::where('place_id',$sku['place_id'])->first();
+                    if(!$location_check){
+                        Location::create([
+                            'place_id'=>$sku['place_id'],
+                            'location_id'=>$sku['id'],
+                        ]);
+
+                        LocationDetails::create([
+                            'place_id'=>$sku['place_id'],
+                            'name'=>$locDetails['name'],
+                            'formatted_address'=>$locDetails['formatted_address'],
+                            'formatted_phone_number'=>$locDetails['formatted_phone_number'],
+                            'international_phone_number'=>$locDetails['international_phone_number'],
+                            'opening_hours'=>json_encode($locDetails['opening_hours']),
+                            'rating'=>$locDetails['rating'],
+                            'user_ratings_total'=>$locDetails['user_ratings_total'],
+
+                        ]);
+
+                        foreach ($rimage as $photo){
+                            LocationPhotos::create([
+                                'place_id'=>$sku['place_id'],
+                                'photo_reference'=>$photo
+                            ]);
+                        }
+
+                        foreach ($locDetails['reviews'] as $review){
+                            LocationReviews::create([
+                                'place_id'=>$sku['place_id'],
+                                'author_name'=>$review['author_name'],
+                                'author_url'=>$review['author_url'],
+                                'profile_photo_url'=>$review['profile_photo_url'],
+                                'relative_time_description'=>$review['relative_time_description'],
+                                'text'=>$review['text']
+                            ]);
+                        }
+
                     }
 
                     $rv[] = array(
