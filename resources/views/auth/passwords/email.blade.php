@@ -41,9 +41,14 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf
-
+                        @include('auth._messages')
                         <div class="form-group row" style="margin-left: 2px;">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 

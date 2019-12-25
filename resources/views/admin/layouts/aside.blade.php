@@ -29,6 +29,7 @@
         <li><a href="{{ route('dashboard') }}"><i class="fa fa-book"></i> <span>Dashboard</span></a></li>
         <li><a href="{{ route('category.index') }}"><i class="fa fa-list-alt"></i> <span>Category</span></a></li>
         <li><a href="{{ route('product.index') }}"><i class="fa fa-shopping-cart"></i> <span>Product</span></a></li></li>
+        <li><a href="{{ route('api.index') }}"><i class="fa fa-cutlery"></i> <span>Resturant Search</span></a></li></li>
 {{--        <li><a href="{{ route('product_images.index') }}"><i class="fa fa-shopping-cart"></i> <span>Product images</span></a></li></li>--}}
     </ul>
 </section>
