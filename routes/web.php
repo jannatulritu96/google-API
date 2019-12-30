@@ -49,3 +49,12 @@ Route::get('category/show/{id}','CategoryController@show')->name('category.show'
 Route::get('category/edit/{id}','CategoryController@edit')->name('category.edit');
 Route::PUT('category/update/{id}','CategoryController@update')->name('category.update');
 Route::POST('category/destroy/{id}','CategoryController@destroy')->name('category.destroy');
+
+// Contact Routes
+Route::get('contact','ContactController@index')->name('contact.index');
+Route::get('contact/create','ContactController@create')->name('contact.create');
+Route::post('contact/store','ContactController@store')->name('contact.store');
+Route::get('contact/show/{id}','ContactController@show')->name('contact.show');
+Route::get('contact/edit/{id}','ContactController@edit')->name('contact.edit');
+Route::PUT('contact/update/{id}','ContactController@update')->name('contact.update');
+Route::POST('contact/destroy/{id}','ContactController@destroy')->name('contact.destroy');

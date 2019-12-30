@@ -35,6 +35,7 @@
         </nav>
     </div>
     <div class="divider"></div>
+
     <div class="container">
         <div class="search-body" id="search-body">
             <input type="text" id="input" class="form-control custom-input" style="border-right-color: transparent" placeholder="Name Your Food">
@@ -48,7 +49,9 @@
         <div class="spinner-border" id="loader" style="margin: auto; display: none" role="status">
             <span class="sr-only">Loading...</span>
         </div>
-        <div class="row" id="card-body"></div>
+        <div class="row" id="card-body">
+
+        </div>
     </div>
 </div>
 <script>
@@ -59,8 +62,14 @@
     let searchPlace = null;
     autocomplete_from.addListener('place_changed', function () {
         let place = autocomplete_from.getPlace();
-        searchPlace = {lat:place.geometry.location.lat(),lon:place.geometry.location.lng()};
+        searchPlace = {
+            lat:place.geometry.location.lat(),
+            lng:place.geometry.location.lng(),
+            formatted_address: place.formatted_address
+        };
     })
+
+
     function search(){
 
         cardBody = '';
@@ -68,11 +77,14 @@
         $('#main-body').addClass('searched');
         $('#search-body').addClass(' searched-body');
         $('#loader').css('display', 'block');
+
+
         $.ajax({
             method: "post",
             data:{
                 lat: searchPlace.lat,
-                lon: searchPlace.lon,
+                lng: searchPlace.lng,
+                formatted_address: searchPlace.formatted_address,
                 input: $('#input').val(),
             },
             url: "{{route('api.get_data')}}",
@@ -86,18 +98,53 @@
                         image = 'http://lorempixel.com/348/215/food/';
                     }
                     cardBody += `<div class="col-md-4">
-                <div class="card">
-                    <img src="${image}" class="card-img-top" alt="..." style="height: 215px;">
-                    <div class="card-body">
-                        <h5 class="card-title"><b>Name: </b>${resturants[i].details.name}</h5>
-                        <p class="card-text"><b>Address: </b>${resturants[i].details.formatted_address}</p>
-                        <p class="card-text"><b>Phone: </b>${resturants[i].details.formatted_phone_number}</p>
-                    </div>
-                </div>
-            </div>`;
+                        <div class="card">
+                            <img src="${image}" class="card-img-top" alt="..." style="height: 215px;">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Name: </b>${resturants[i].details.name}</h5>
+                                <p class="card-text"><b>Address: </b>${resturants[i].details.formatted_address}</p>
+                                <p class="card-text"><b>Phone: </b>${resturants[i].details.formatted_phone_number}</p>
+                            </div>
+                        </div>
+                    </div>`;
                 }
                 $('#card-body').html(cardBody);
             }});
+
+
+        {{--$.ajax({--}}
+        {{--    method: "post",--}}
+        {{--    data:{--}}
+        {{--        lat: searchPlace.lat,--}}
+        {{--        lng: searchPlace.lng,--}}
+        {{--        formatted_address: searchPlace.formatted_address,--}}
+        {{--        input: $('#input').val(),--}}
+        {{--    },--}}
+        {{--    url: "{{route('api.search-database')}}",--}}
+        {{--    success: function(res){--}}
+        {{--        $('#loader').css('display', 'none');--}}
+        {{--        // resturants = res.locations;--}}
+        {{--        console.log(res);--}}
+        {{--        return false;--}}
+        {{--        for (let i = 0; i < resturants.length; i++) {--}}
+        {{--            image = resturants[i].storePhotos[0];--}}
+        {{--            if (!resturants[i].storePhotos[0]) {--}}
+        {{--                image = 'http://lorempixel.com/348/215/food/';--}}
+        {{--            }--}}
+        {{--            cardBody += `<div class="col-md-4">--}}
+        {{--            <div class="card">--}}
+        {{--                <img src="${image}" class="card-img-top" alt="..." style="height: 215px;">--}}
+        {{--                <div class="card-body">--}}
+        {{--                    <h5 class="card-title"><b>Name: </b>${resturants[i].details.name}</h5>--}}
+        {{--                    <p class="card-text"><b>Address: </b>${resturants[i].details.formatted_address}</p>--}}
+        {{--                    <p class="card-text"><b>Phone: </b>${resturants[i].details.formatted_phone_number}</p>--}}
+        {{--                </div>--}}
+        {{--            </div>--}}
+        {{--        </div>`;--}}
+        {{--        }--}}
+        {{--        $('#card-body').html(cardBody);--}}
+        {{--    }});--}}
+
     }
 
 </script>
